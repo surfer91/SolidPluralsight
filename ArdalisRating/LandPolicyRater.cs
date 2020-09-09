@@ -2,16 +2,14 @@ using System;
 
 namespace ArdalisRating{
 
-public class LandPolicyRater{
-    private readonly RatingEngine _engine;
-    private ConsoleLogger _logger;
-    public LandPolicyRater(RatingEngine engine,ConsoleLogger logger)
-    { _engine=engine;
-    _logger=logger;
+public class LandPolicyRater:Rater{
+ 
+   public LandPolicyRater(RatingEngine engine,ConsoleLogger logger):base(engine,logger)
+    { 
         
     }
 
-public void Rate(Policy policy){
+public override void Rate(Policy policy){
                       _logger.Log("Rating LAND policy...");
                   _logger.Log("Validating policy.");
                     if (policy.BondAmount == 0 || policy.Valuation == 0)
