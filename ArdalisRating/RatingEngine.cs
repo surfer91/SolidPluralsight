@@ -10,31 +10,26 @@ namespace ArdalisRating
     /// rating value based on the details.
     /// </summary>
     public class RatingEngine
-    {
+    {   public IRatingContext Context{get;set;}=new DefaultRatingContext();
         public decimal Rating { get; set; }
 
-        public ConsoleLogger Logger { get; set; }=new ConsoleLogger();
-        public FilePolicySource PolicySource { get; set; }=new FilePolicySource();
-
-        public FilePolicySerializer PolicySerializer { get; set; }=new FilePolicySerializer();
+    public RatingEngine(){
+        Context.Engine=this;
+    }
 
         public void Rate()
         {
-            Logger.Log("Starting rate.");
+            Context.Log("Starting rate.");
 
-            Logger.Log("Loading policy.");
+           Context.Log("Loading policy.");
 
             // load policy - open file policy.json
-            string policyJson = PolicySource.GetPolicyFormSource();
-            var policy = PolicySerializer.GetPolicyFromJsonString(policyJson);
-            var factory=new RaterFactory();
-               var rater=factory.Create(policy,this);
+            string policyJson = Context.LoadPolicyFromFile();
+            var policy = Context.GetPolicyFromJsonString(policyJson);
+            var rater=Context.CreateRaterForPolicy(policy,Context);
+              
                rater.Rate(policy);
-               
-
-     
-
-            Logger.Log("Rating completed.");
+            Context.Log("Rating completed.");
         }
     }
 }
